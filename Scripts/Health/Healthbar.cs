@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Отображение здоровья игрока на UI
+// РћС‚РѕР±СЂР°Р¶РµРЅРёРµ Р·РґРѕСЂРѕРІСЊСЏ РёРіСЂРѕРєР° РЅР° UI
 public class Healthbar : MonoBehaviour
 {
-    [SerializeField] private Health playerHealth; // Ссылка на здоровье игрока
-    [SerializeField] private Image totalhealthBar; // Полоса максимального здоровья
-    [SerializeField] private Image currenthealthBar; // Полоса текущего здоровья
+    [SerializeField] private Health playerHealth; // РЎСЃС‹Р»РєР° РЅР° Р·РґРѕСЂРѕРІСЊРµ РёРіСЂРѕРєР°
+    [SerializeField] private Image totalhealthBar; // РџРѕР»РѕСЃР° РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ Р·РґРѕСЂРѕРІСЊСЏ
+    [SerializeField] private Image currenthealthBar; // РџРѕР»РѕСЃР° С‚РµРєСѓС‰РµРіРѕ Р·РґРѕСЂРѕРІСЊСЏ
 
     private void Start()
     {
-        // Инициализация полосы максимального здоровья (предполагается 10 макс. здоровья)
+        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РїРѕР»РѕСЃС‹ РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ Р·РґРѕСЂРѕРІСЊСЏ (РїСЂРµРґРїРѕР»Р°РіР°РµС‚СЃСЏ 10 РјР°РєСЃ. Р·РґРѕСЂРѕРІСЊСЏ)
         totalhealthBar.fillAmount = playerHealth.currentHealth / 10;
     }
 
     private void Update()
     {
-        // Обновление полосы текущего здоровья
+        // РћР±РЅРѕРІР»РµРЅРёРµ РїРѕР»РѕСЃС‹ С‚РµРєСѓС‰РµРіРѕ Р·РґРѕСЂРѕРІСЊСЏ
         currenthealthBar.fillAmount = playerHealth.currentHealth / 10;
     }
 }
