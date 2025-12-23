@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Дверь между комнатами, управляющая камерой
+// Р”РІРµСЂСЊ РјРµР¶РґСѓ РєРѕРјРЅР°С‚Р°РјРё, СѓРїСЂР°РІР»СЏСЋС‰Р°СЏ РєР°РјРµСЂРѕР№
 public class Door : MonoBehaviour
 {
-    [SerializeField] private Transform previousRoom; // Предыдущая комната
-    [SerializeField] private Transform nextRoom; // Следующая комната
-    [SerializeField] private CameraController cam; // Контроллер камеры
+    [SerializeField] private Transform previousRoom; // РџСЂРµРґС‹РґСѓС‰Р°СЏ РєРѕРјРЅР°С‚Р°
+    [SerializeField] private Transform nextRoom; // РЎР»РµРґСѓСЋС‰Р°СЏ РєРѕРјРЅР°С‚Р°
+    [SerializeField] private CameraController cam; // РљРѕРЅС‚СЂРѕР»Р»РµСЂ РєР°РјРµСЂС‹
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
-            // Определение направления движения игрока
+            // РћРїСЂРµРґРµР»РµРЅРёРµ РЅР°РїСЂР°РІР»РµРЅРёСЏ РґРІРёР¶РµРЅРёСЏ РёРіСЂРѕРєР°
             if (collision.transform.position.x < transform.position.x)
-                cam.MoveToNewRoom(nextRoom); // Движение вправо - следующая комната
+                cam.MoveToNewRoom(nextRoom); // Р”РІРёР¶РµРЅРёРµ РІРїСЂР°РІРѕ - СЃР»РµРґСѓСЋС‰Р°СЏ РєРѕРјРЅР°С‚Р°
             else
-                cam.MoveToNewRoom(previousRoom); // Движение влево - предыдущая комната
+                cam.MoveToNewRoom(previousRoom); // Р”РІРёР¶РµРЅРёРµ РІР»РµРІРѕ - РїСЂРµРґС‹РґСѓС‰Р°СЏ РєРѕРјРЅР°С‚Р°
         }
     }
 }
