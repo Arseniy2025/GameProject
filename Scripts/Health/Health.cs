@@ -2,61 +2,61 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Система здоровья для игрока и врагов
+// РЎРёСЃС‚РµРјР° Р·РґРѕСЂРѕРІСЊСЏ РґР»СЏ РёРіСЂРѕРєР° Рё РІСЂР°РіРѕРІ
 public class Health : MonoBehaviour
 {
     [Header("Health")]
-    [SerializeField] private float startingHealth = 5; // Начальное здоровье
-    public float currentHealth { get; private set; } // Текущее здоровье (публичное свойство)
-    private Animator anim; // Компонент анимации
-    private bool dead; // Флаг смерти
+    [SerializeField] private float startingHealth = 5; // РќР°С‡Р°Р»СЊРЅРѕРµ Р·РґРѕСЂРѕРІСЊРµ
+    public float currentHealth { get; private set; } // РўРµРєСѓС‰РµРµ Р·РґРѕСЂРѕРІСЊРµ (РїСѓР±Р»РёС‡РЅРѕРµ СЃРІРѕР№СЃС‚РІРѕ)
+    private Animator anim; // РљРѕРјРїРѕРЅРµРЅС‚ Р°РЅРёРјР°С†РёРё
+    private bool dead; // Р¤Р»Р°Рі СЃРјРµСЂС‚Рё
 
     [Header("iFrames")]
-    [SerializeField] private float iFramesDuration; // Длительность неуязвимости
-    [SerializeField] private int numberOfFlashes; // Количество миганий при неуязвимости
-    private SpriteRenderer spriteRend; // Компонент отображения спрайта
+    [SerializeField] private float iFramesDuration; // Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
+    [SerializeField] private int numberOfFlashes; // РљРѕР»РёС‡РµСЃС‚РІРѕ РјРёРіР°РЅРёР№ РїСЂРё РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
+    private SpriteRenderer spriteRend; // РљРѕРјРїРѕРЅРµРЅС‚ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ СЃРїСЂР°Р№С‚Р°
 
     [Header("Components")]
-    [SerializeField] private Behaviour[] components; // Компоненты для отключения при смерти
-    private bool invulnerable; // Флаг неуязвимости
+    [SerializeField] private Behaviour[] components; // РљРѕРјРїРѕРЅРµРЅС‚С‹ РґР»СЏ РѕС‚РєР»СЋС‡РµРЅРёСЏ РїСЂРё СЃРјРµСЂС‚Рё
+    private bool invulnerable; // Р¤Р»Р°Рі РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
 
-    private UIManager uiManager; // Менеджер интерфейса
+    private UIManager uiManager; // РњРµРЅРµРґР¶РµСЂ РёРЅС‚РµСЂС„РµР№СЃР°
 
     private void Awake()
     {
-        currentHealth = startingHealth; // Инициализация здоровья
+        currentHealth = startingHealth; // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р·РґРѕСЂРѕРІСЊСЏ
         anim = GetComponent<Animator>();
         spriteRend = GetComponent<SpriteRenderer>();
-        uiManager = FindObjectOfType<UIManager>(); // Поиск менеджера UI
+        uiManager = FindObjectOfType<UIManager>(); // РџРѕРёСЃРє РјРµРЅРµРґР¶РµСЂР° UI
     }
 
-    // Получение урона
+    // РџРѕР»СѓС‡РµРЅРёРµ СѓСЂРѕРЅР°
     public void TakeDamage(float _damage)
     {
-        if (invulnerable || dead) return; // Если неуязвим или мертв - игнорируем урон
+        if (invulnerable || dead) return; // Р•СЃР»Рё РЅРµСѓСЏР·РІРёРј РёР»Рё РјРµСЂС‚РІ - РёРіРЅРѕСЂРёСЂСѓРµРј СѓСЂРѕРЅ
 
-        currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth); // Уменьшение здоровья
+        currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth); // РЈРјРµРЅСЊС€РµРЅРёРµ Р·РґРѕСЂРѕРІСЊСЏ
 
-        if (currentHealth > 0) // Если еще жив
+        if (currentHealth > 0) // Р•СЃР»Рё РµС‰Рµ Р¶РёРІ
         {
-            anim.SetTrigger("hurt"); // Анимация получения урона
-            StartCoroutine(Invunerability()); // Активация неуязвимости
+            anim.SetTrigger("hurt"); // РђРЅРёРјР°С†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ СѓСЂРѕРЅР°
+            StartCoroutine(Invunerability()); // РђРєС‚РёРІР°С†РёСЏ РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
         }
-        else // Если умер
+        else // Р•СЃР»Рё СѓРјРµСЂ
         {
             if (!dead)
             {
-                Die(); // Вызов смерти
+                Die(); // Р’С‹Р·РѕРІ СЃРјРµСЂС‚Рё
             }
         }
     }
 
-    // Обработка смерти
+    // РћР±СЂР°Р±РѕС‚РєР° СЃРјРµСЂС‚Рё
     private void Die()
     {
-        dead = true; // Установка флага смерти
+        dead = true; // РЈСЃС‚Р°РЅРѕРІРєР° С„Р»Р°РіР° СЃРјРµСЂС‚Рё
 
-        // Отключение всех компонентов из массива
+        // РћС‚РєР»СЋС‡РµРЅРёРµ РІСЃРµС… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ РёР· РјР°СЃСЃРёРІР°
         if (components != null)
         {
             foreach (Behaviour component in components)
@@ -65,23 +65,23 @@ public class Health : MonoBehaviour
             }
         }
 
-        // Остановка физического движения
+        // РћСЃС‚Р°РЅРѕРІРєР° С„РёР·РёС‡РµСЃРєРѕРіРѕ РґРІРёР¶РµРЅРёСЏ
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = Vector2.zero; // Сброс скорости
-            rb.gravityScale = 0; // Отключение гравитации
+            rb.velocity = Vector2.zero; // РЎР±СЂРѕСЃ СЃРєРѕСЂРѕСЃС‚Рё
+            rb.gravityScale = 0; // РћС‚РєР»СЋС‡РµРЅРёРµ РіСЂР°РІРёС‚Р°С†РёРё
         }
 
-        // Анимация смерти
-        anim.SetBool("grounded", true); // Установка на земле
-        anim.SetTrigger("die"); // Триггер анимации смерти
+        // РђРЅРёРјР°С†РёСЏ СЃРјРµСЂС‚Рё
+        anim.SetBool("grounded", true); // РЈСЃС‚Р°РЅРѕРІРєР° РЅР° Р·РµРјР»Рµ
+        anim.SetTrigger("die"); // РўСЂРёРіРіРµСЂ Р°РЅРёРјР°С†РёРё СЃРјРµСЂС‚Рё
 
-        // Вызов Game Over через 1 секунду
+        // Р’С‹Р·РѕРІ Game Over С‡РµСЂРµР· 1 СЃРµРєСѓРЅРґСѓ
         Invoke("CallGameOver", 1f);
     }
 
-    // Вызов Game Over в UI
+    // Р’С‹Р·РѕРІ Game Over РІ UI
     private void CallGameOver()
     {
         if (uiManager != null)
@@ -90,52 +90,52 @@ public class Health : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("UIManager не найден!");
+            Debug.LogWarning("UIManager РЅРµ РЅР°Р№РґРµРЅ!");
         }
     }
 
-    // Добавление здоровья
+    // Р”РѕР±Р°РІР»РµРЅРёРµ Р·РґРѕСЂРѕРІСЊСЏ
     public void AddHealth(float _value)
     {
         currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
     }
 
-    // Корутина неуязвимости
+    // РљРѕСЂСѓС‚РёРЅР° РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
     private IEnumerator Invunerability()
     {
-        invulnerable = true; // Установка флага неуязвимости
+        invulnerable = true; // РЈСЃС‚Р°РЅРѕРІРєР° С„Р»Р°РіР° РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
 
-        // Игнорирование столкновений с врагами
+        // РРіРЅРѕСЂРёСЂРѕРІР°РЅРёРµ СЃС‚РѕР»РєРЅРѕРІРµРЅРёР№ СЃ РІСЂР°РіР°РјРё
         Physics2D.IgnoreLayerCollision(10, 11, true);
 
-        // Мигание спрайта
+        // РњРёРіР°РЅРёРµ СЃРїСЂР°Р№С‚Р°
         for (int i = 0; i < numberOfFlashes; i++)
         {
-            spriteRend.color = new Color(1, 0, 0, 0.5f); // Красный полупрозрачный
+            spriteRend.color = new Color(1, 0, 0, 0.5f); // РљСЂР°СЃРЅС‹Р№ РїРѕР»СѓРїСЂРѕР·СЂР°С‡РЅС‹Р№
             yield return new WaitForSeconds(iFramesDuration / (numberOfFlashes * 2));
-            spriteRend.color = Color.white; // Белый нормальный
+            spriteRend.color = Color.white; // Р‘РµР»С‹Р№ РЅРѕСЂРјР°Р»СЊРЅС‹Р№
             yield return new WaitForSeconds(iFramesDuration / (numberOfFlashes * 2));
         }
 
-        // Восстановление коллизий
+        // Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ РєРѕР»Р»РёР·РёР№
         Physics2D.IgnoreLayerCollision(10, 11, false);
-        invulnerable = false; // Снятие флага неуязвимости
+        invulnerable = false; // РЎРЅСЏС‚РёРµ С„Р»Р°РіР° РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё
     }
 
     private void Deactivate()
     {
-        // Опциональный метод для полной деактивации объекта
+        // РћРїС†РёРѕРЅР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ РґР»СЏ РїРѕР»РЅРѕР№ РґРµР°РєС‚РёРІР°С†РёРё РѕР±СЉРµРєС‚Р°
     }
 
-    // Возрождение объекта
+    // Р’РѕР·СЂРѕР¶РґРµРЅРёРµ РѕР±СЉРµРєС‚Р°
     public void Respawn()
     {
-        if (!dead) return; // Если не умер, не нужно респавнить
+        if (!dead) return; // Р•СЃР»Рё РЅРµ СѓРјРµСЂ, РЅРµ РЅСѓР¶РЅРѕ СЂРµСЃРїР°РІРЅРёС‚СЊ
 
-        dead = false; // Снятие флага смерти
-        currentHealth = startingHealth; // Восстановление здоровья
+        dead = false; // РЎРЅСЏС‚РёРµ С„Р»Р°РіР° СЃРјРµСЂС‚Рё
+        currentHealth = startingHealth; // Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ Р·РґРѕСЂРѕРІСЊСЏ
 
-        // Включение всех компонентов
+        // Р’РєР»СЋС‡РµРЅРёРµ РІСЃРµС… РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
         if (components != null)
         {
             foreach (Behaviour component in components)
@@ -144,19 +144,19 @@ public class Health : MonoBehaviour
             }
         }
 
-        // Восстановление физики
+        // Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ С„РёР·РёРєРё
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.gravityScale = 7; // Значение по умолчанию из PlayerMove
+            rb.gravityScale = 7; // Р—РЅР°С‡РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ РёР· PlayerMove
         }
 
-        // Сброс анимаций
+        // РЎР±СЂРѕСЃ Р°РЅРёРјР°С†РёР№
         anim.ResetTrigger("die");
         anim.ResetTrigger("hurt");
-        anim.Play("Idle"); // Воспроизведение анимации покоя
+        anim.Play("Idle"); // Р’РѕСЃРїСЂРѕРёР·РІРµРґРµРЅРёРµ Р°РЅРёРјР°С†РёРё РїРѕРєРѕСЏ
 
-        // Включение неуязвимости на короткое время
+        // Р’РєР»СЋС‡РµРЅРёРµ РЅРµСѓСЏР·РІРёРјРѕСЃС‚Рё РЅР° РєРѕСЂРѕС‚РєРѕРµ РІСЂРµРјСЏ
         StartCoroutine(Invunerability());
     }
 }
