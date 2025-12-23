@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Player_Respawn : MonoBehaviour
 {
-    [SerializeField] private AudioClip checkpointSound;
     private Transform currentCheckpoint;
     private Health playerHealth;
     private UIManager uiManager;
@@ -64,14 +63,9 @@ public class Player_Respawn : MonoBehaviour
             {
                 checkpointAnim.SetTrigger("activate");
             }
-
-            // Воспроизводим звук
-            if (checkpointSound != null)
-            {
-                AudioSource.PlayClipAtPoint(checkpointSound, transform.position);
-            }
-
+           
             Debug.Log("Чекпоинт активирован!");
         }
     }
 }
+
