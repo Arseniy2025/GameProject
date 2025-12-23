@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Система атаки игрока
+// РЎРёСЃС‚РµРјР° Р°С‚Р°РєРё РёРіСЂРѕРєР°
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] private float attackCooldown; // Задержка между атаками
-    [SerializeField] private Transform firePoint; // Точка выстрела
-    [SerializeField] private GameObject[] fireballs; // Массив огненных шаров (пул объектов)
+    [SerializeField] private float attackCooldown; // Р—Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ Р°С‚Р°РєР°РјРё
+    [SerializeField] private Transform firePoint; // РўРѕС‡РєР° РІС‹СЃС‚СЂРµР»Р°
+    [SerializeField] private GameObject[] fireballs; // РњР°СЃСЃРёРІ РѕРіРЅРµРЅРЅС‹С… С€Р°СЂРѕРІ (РїСѓР» РѕР±СЉРµРєС‚РѕРІ)
 
-    private Animator anim; // Компонент анимации
-    private PlayerMove playerMovement; // Компонент движения игрока
-    private float cooldownTimer = Mathf.Infinity; // Таймер перезарядки
+    private Animator anim; // РљРѕРјРїРѕРЅРµРЅС‚ Р°РЅРёРјР°С†РёРё
+    private PlayerMove playerMovement; // РљРѕРјРїРѕРЅРµРЅС‚ РґРІРёР¶РµРЅРёСЏ РёРіСЂРѕРєР°
+    private float cooldownTimer = Mathf.Infinity; // РўР°Р№РјРµСЂ РїРµСЂРµР·Р°СЂСЏРґРєРё
 
     private void Awake()
     {
@@ -21,35 +21,35 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
-        // Проверка возможности атаки (клик левой кнопкой мыши)
+        // РџСЂРѕРІРµСЂРєР° РІРѕР·РјРѕР¶РЅРѕСЃС‚Рё Р°С‚Р°РєРё (РєР»РёРє Р»РµРІРѕР№ РєРЅРѕРїРєРѕР№ РјС‹С€Рё)
         if (Input.GetMouseButtonDown(0) && cooldownTimer > attackCooldown && playerMovement.canAttack())
-            Attack(); // Выполнение атаки
+            Attack(); // Р’С‹РїРѕР»РЅРµРЅРёРµ Р°С‚Р°РєРё
 
-        cooldownTimer += Time.deltaTime; // Обновление таймера
+        cooldownTimer += Time.deltaTime; // РћР±РЅРѕРІР»РµРЅРёРµ С‚Р°Р№РјРµСЂР°
     }
 
-    // Выполнение атаки
+    // Р’С‹РїРѕР»РЅРµРЅРёРµ Р°С‚Р°РєРё
     private void Attack()
     {
-        anim.SetTrigger("attack"); // Анимация атаки
-        cooldownTimer = 0; // Сброс таймера
+        anim.SetTrigger("attack"); // РђРЅРёРјР°С†РёСЏ Р°С‚Р°РєРё
+        cooldownTimer = 0; // РЎР±СЂРѕСЃ С‚Р°Р№РјРµСЂР°
 
-        int fireballIndex = FindFireball(); // Поиск доступного огненного шара
-        if (fireballIndex != -1) // Если найден доступный снаряд
+        int fireballIndex = FindFireball(); // РџРѕРёСЃРє РґРѕСЃС‚СѓРїРЅРѕРіРѕ РѕРіРЅРµРЅРЅРѕРіРѕ С€Р°СЂР°
+        if (fireballIndex != -1) // Р•СЃР»Рё РЅР°Р№РґРµРЅ РґРѕСЃС‚СѓРїРЅС‹Р№ СЃРЅР°СЂСЏРґ
         {
-            fireballs[fireballIndex].transform.position = firePoint.position; // Установка позиции
-            fireballs[fireballIndex].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x)); // Направление
+            fireballs[fireballIndex].transform.position = firePoint.position; // РЈСЃС‚Р°РЅРѕРІРєР° РїРѕР·РёС†РёРё
+            fireballs[fireballIndex].GetComponent<Projectile>().SetDirection(Mathf.Sign(transform.localScale.x)); // РќР°РїСЂР°РІР»РµРЅРёРµ
         }
     }
 
-    // Поиск неактивного огненного шара в пуле
+    // РџРѕРёСЃРє РЅРµР°РєС‚РёРІРЅРѕРіРѕ РѕРіРЅРµРЅРЅРѕРіРѕ С€Р°СЂР° РІ РїСѓР»Рµ
     private int FindFireball()
     {
         for (int i = 0; i < fireballs.Length; i++)
         {
             if (!fireballs[i].activeInHierarchy)
-                return i; // Возврат индекса неактивного снаряда
+                return i; // Р’РѕР·РІСЂР°С‚ РёРЅРґРµРєСЃР° РЅРµР°РєС‚РёРІРЅРѕРіРѕ СЃРЅР°СЂСЏРґР°
         }
-        return -1; // Все снаряды активны
+        return -1; // Р’СЃРµ СЃРЅР°СЂСЏРґС‹ Р°РєС‚РёРІРЅС‹
     }
 }
