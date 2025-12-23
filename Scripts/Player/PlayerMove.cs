@@ -9,16 +9,16 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float jumpPower;
 
     [Header("Coyote Time")]
-    [SerializeField] private float coyoteTime; //How much time the player can hang in the air before jumping
-    private float coyoteCounter; //How much time passed since the player ran off the edge
+    [SerializeField] private float coyoteTime; // Сколько времени игрок может висеть в воздухе перед прыжком
+    private float coyoteCounter; // Сколько времени прошло с момента как игрок сошел с края
 
     [Header("Multiple Jumps")]
     [SerializeField] private int extraJumps;
     private int jumpCounter;
 
     [Header("Wall Jumping")]
-    [SerializeField] private float wallJumpX; //Horizontal wall jump force
-    [SerializeField] private float wallJumpY; //Vertical wall jump force
+    [SerializeField] private float wallJumpX; // Горизонтальная сила прыжка от стены
+    [SerializeField] private float wallJumpY; // Вертикальная сила прыжка от стены
 
     [Header("Layers")]
     [SerializeField] private LayerMask groundLayer;
@@ -33,16 +33,16 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private UIManager uiManager;
 
     [Header("Player Scale")]
-    [SerializeField] private Vector3 playerScale = new Vector3(5, 5, 1); // ������������� ������ 5
+    [SerializeField] private Vector3 playerScale = new Vector3(5, 5, 1); // Фиксированный размер 5
 
     private void Awake()
     {
-        //Grab references for rigidbody and animator from object
+        // Получаем ссылки на rigidbody и animator из объекта
         body = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
 
-        // ������������� ������������� ������ ��� ������
+        // Устанавливаем фиксированный размер при старте
         transform.localScale = playerScale;
     }
 
@@ -50,21 +50,21 @@ public class PlayerMove : MonoBehaviour
     {
         horizontalInput = Input.GetAxis("Horizontal");
 
-        //Flip player when moving left-right (������ ������ ���� X, �������� ������)
+        // Переворот игрока при движении влево-вправо (только меняем знак X, сохраняя размер)
         if (horizontalInput > 0.01f)
             transform.localScale = new Vector3(Mathf.Abs(playerScale.x), playerScale.y, playerScale.z);
         else if (horizontalInput < -0.01f)
             transform.localScale = new Vector3(-Mathf.Abs(playerScale.x), playerScale.y, playerScale.z);
 
-        //Set animator parameters
+        // Установка параметров аниматора
         anim.SetBool("run", horizontalInput != 0);
         anim.SetBool("grounded", isGrounded());
 
-        //Jump
+        // Прыжок
         if (Input.GetKeyDown(KeyCode.Space))
             Jump();
 
-        //Adjustable jump height
+        // Регулируемая высота прыжка
         if (Input.GetKeyUp(KeyCode.Space) && body.velocity.y > 0)
             body.velocity = new Vector2(body.velocity.x, body.velocity.y / 2);
 
@@ -80,19 +80,18 @@ public class PlayerMove : MonoBehaviour
 
             if (isGrounded())
             {
-                coyoteCounter = coyoteTime; //Reset coyote counter when on the ground
-                jumpCounter = extraJumps; //Reset jump counter to extra jump value
+                coyoteCounter = coyoteTime; // Сброс счетчика койота при нахождении на земле
+                jumpCounter = extraJumps; // Сброс счетчика прыжков до значения дополнительных прыжков
             }
             else
-                coyoteCounter -= Time.deltaTime; //Start decreasing coyote counter when not on the ground
+                coyoteCounter -= Time.deltaTime; // Начало уменьшения счетчика койота при отсутствии на земле
         }
     }
 
     private void Jump()
     {
         if (coyoteCounter <= 0 && !onWall() && jumpCounter <= 0) return;
-        //If coyote counter is 0 or less and not on the wall and don't have any extra jumps don't do anything
-
+        // Если счетчик койота 0 или меньше и не на стене и нет дополнительных прыжков - ничего не делаем
 
         if (onWall())
             WallJump();
@@ -102,12 +101,12 @@ public class PlayerMove : MonoBehaviour
                 body.velocity = new Vector2(body.velocity.x, jumpPower);
             else
             {
-                //If not on the ground and coyote counter bigger than 0 do a normal jump
+                // Если не на земле и счетчик койота больше 0 - делаем обычный прыжок
                 if (coyoteCounter > 0)
                     body.velocity = new Vector2(body.velocity.x, jumpPower);
                 else
                 {
-                    if (jumpCounter > 0) //If we have extra jumps then jump and decrease the jump counter
+                    if (jumpCounter > 0) // Если есть дополнительные прыжки, то прыгаем и уменьшаем счетчик
                     {
                         body.velocity = new Vector2(body.velocity.x, jumpPower);
                         jumpCounter--;
@@ -115,7 +114,7 @@ public class PlayerMove : MonoBehaviour
                 }
             }
 
-            //Reset coyote counter to 0 to avoid double jumps
+            // Сброс счетчика койота в 0 чтобы избежать двойных прыжков
             coyoteCounter = 0;
         }
     }
@@ -125,7 +124,6 @@ public class PlayerMove : MonoBehaviour
         body.AddForce(new Vector2(-Mathf.Sign(transform.localScale.x) * wallJumpX, wallJumpY));
         wallJumpCooldown = 0;
     }
-
 
     private bool isGrounded()
     {
@@ -144,7 +142,7 @@ public class PlayerMove : MonoBehaviour
         return horizontalInput == 0 && isGrounded() && !onWall();
     }
 
-    // ����� ��� �������������� ��������� ������� (����� ������� �� ������ ��������)
+    // Метод для принудительной установки размера (можно вызвать из других скриптов)
     public void SetFixedScale(float scaleValue)
     {
         playerScale = new Vector3(scaleValue, scaleValue, 1);
