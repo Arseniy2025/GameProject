@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Базовый класс для урона от врагов
+// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СѓСЂРѕРЅР° РѕС‚ РІСЂР°РіРѕРІ
 public class EnemyDamage : MonoBehaviour
 {
-    [SerializeField] protected float damage; // Величина урона
+    [SerializeField] protected float damage; // Р’РµР»РёС‡РёРЅР° СѓСЂРѕРЅР°
 
-    // Виртуальный метод обработки столкновения
+    // Р’РёСЂС‚СѓР°Р»СЊРЅС‹Р№ РјРµС‚РѕРґ РѕР±СЂР°Р±РѕС‚РєРё СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ
     protected void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
-            collision.GetComponent<Health>().TakeDamage(damage); // Нанесение урона
+            collision.GetComponent<Health>().TakeDamage(damage); // РќР°РЅРµСЃРµРЅРёРµ СѓСЂРѕРЅР°
     }
 }
