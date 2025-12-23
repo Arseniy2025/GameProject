@@ -2,36 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Проектиль, выпускаемый врагами (наследует от EnemyDamage)
+// РЎРЅР°СЂСЏРґ, РІС‹РїСѓСЃРєР°РµРјС‹Р№ РІСЂР°РіР°РјРё (РЅР°СЃР»РµРґСѓРµС‚ РѕС‚ EnemyDamage)
 public class EnemyProjectle : EnemyDamage
 {
-    [SerializeField] private float speed; // Скорость полета
-    [SerializeField] private float resetTime; // Время жизни снаряда
-    private float lifetime; // Текущее время жизни
+    [SerializeField] private float speed; // РЎРєРѕСЂРѕСЃС‚СЊ РїРѕР»РµС‚Р°
+    [SerializeField] private float resetTime; // Р’СЂРµРјСЏ Р¶РёР·РЅРё СЃРЅР°СЂСЏРґР°
+    private float lifetime; // РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ Р¶РёР·РЅРё
 
-    // Активация снаряда (вызывается извне)
+    // РђРєС‚РёРІР°С†РёСЏ СЃРЅР°СЂСЏРґР° (РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР·РІРЅРµ)
     public void ActivateProjectile()
     {
-        lifetime = 0; // Сброс времени жизни
-        gameObject.SetActive(true); // Активация объекта
+        lifetime = 0; // РЎР±СЂРѕСЃ РІСЂРµРјРµРЅРё Р¶РёР·РЅРё
+        gameObject.SetActive(true); // РђРєС‚РёРІР°С†РёСЏ РѕР±СЉРµРєС‚Р°
     }
 
     private void Update()
     {
-        // Движение снаряда вперед
+        // Р”РІРёР¶РµРЅРёРµ СЃРЅР°СЂСЏРґР° РІРїРµСЂРµРґ
         float movementSpeed = speed * Time.deltaTime;
         transform.Translate(movementSpeed, 0, 0);
 
-        // Увеличение времени жизни
+        // РЈРІРµР»РёС‡РµРЅРёРµ РІСЂРµРјРµРЅРё Р¶РёР·РЅРё
         lifetime += Time.deltaTime;
         if (lifetime > resetTime)
-            gameObject.SetActive(false); // Деактивация по истечении времени
+            gameObject.SetActive(false); // Р”РµР°РєС‚РёРІР°С†РёСЏ РїРѕ РёСЃС‚РµС‡РµРЅРёРё РІСЂРµРјРµРЅРё
     }
 
-    // Обработка столкновения
+    // РћР±СЂР°Р±РѕС‚РєР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(collision); // Вызов родительского метода для нанесения урона
-        gameObject.SetActive(false); // Деактивация при любом столкновении
+        base.OnTriggerEnter2D(collision); // Р’С‹Р·РѕРІ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРіРѕ РјРµС‚РѕРґР° РґР»СЏ РЅР°РЅРµСЃРµРЅРёСЏ СѓСЂРѕРЅР°
+        gameObject.SetActive(false); // Р”РµР°РєС‚РёРІР°С†РёСЏ РїСЂРё Р»СЋР±РѕРј СЃС‚РѕР»РєРЅРѕРІРµРЅРёРё
     }
 }
