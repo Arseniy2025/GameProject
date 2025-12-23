@@ -2,55 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Враг, движущийся горизонтально (вправо-влево)
+// Р’СЂР°Рі, РґРІРёР¶СѓС‰РёР№СЃСЏ РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕ (РІРїСЂР°РІРѕ-РІР»РµРІРѕ)
 public class Enemy_Sideways : MonoBehaviour
 {
-    [SerializeField] private float movementDistance; // Дистанция движения
-    [SerializeField] private float speed; // Скорость движения
-    [SerializeField] private float damage; // Урон, наносимый игроку
-    private bool movingLeft; // Флаг направления движения
-    private float leftEdge; // Левая граница движения
-    private float rightEdge; // Правая граница движения
+    [SerializeField] private float movementDistance; // Р”РёСЃС‚Р°РЅС†РёСЏ РґРІРёР¶РµРЅРёСЏ
+    [SerializeField] private float speed; // РЎРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ
+    [SerializeField] private float damage; // РЈСЂРѕРЅ, РЅР°РЅРѕСЃРёРјС‹Р№ РёРіСЂРѕРєСѓ
+    private bool movingLeft; // Р¤Р»Р°Рі РЅР°РїСЂР°РІР»РµРЅРёСЏ РґРІРёР¶РµРЅРёСЏ
+    private float leftEdge; // Р›РµРІР°СЏ РіСЂР°РЅРёС†Р° РґРІРёР¶РµРЅРёСЏ
+    private float rightEdge; // РџСЂР°РІР°СЏ РіСЂР°РЅРёС†Р° РґРІРёР¶РµРЅРёСЏ
 
     private void Awake()
     {
-        // Расчет границ движения относительно начальной позиции
+        // Р Р°СЃС‡РµС‚ РіСЂР°РЅРёС† РґРІРёР¶РµРЅРёСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»СЊРЅРѕР№ РїРѕР·РёС†РёРё
         leftEdge = transform.position.x - movementDistance;
         rightEdge = transform.position.x + movementDistance;
     }
 
     private void Update()
     {
-        // Логика движения влево
+        // Р›РѕРіРёРєР° РґРІРёР¶РµРЅРёСЏ РІР»РµРІРѕ
         if (movingLeft)
         {
             if (transform.position.x > leftEdge)
             {
-                // Движение влево
+                // Р”РІРёР¶РµРЅРёРµ РІР»РµРІРѕ
                 transform.position = new Vector3(transform.position.x - speed * Time.deltaTime, transform.position.y, transform.position.z);
             }
             else
-                movingLeft = false; // Достигли левой границы - меняем направление
+                movingLeft = false; // Р”РѕСЃС‚РёРіР»Рё Р»РµРІРѕР№ РіСЂР°РЅРёС†С‹ - РјРµРЅСЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ
         }
-        // Логика движения вправо
+        // Р›РѕРіРёРєР° РґРІРёР¶РµРЅРёСЏ РІРїСЂР°РІРѕ
         else
         {
             if (transform.position.x < rightEdge)
             {
-                // Движение вправо
+                // Р”РІРёР¶РµРЅРёРµ РІРїСЂР°РІРѕ
                 transform.position = new Vector3(transform.position.x + speed * Time.deltaTime, transform.position.y, transform.position.z);
             }
             else
-                movingLeft = true; // Достигли правой границы - меняем направление
+                movingLeft = true; // Р”РѕСЃС‚РёРіР»Рё РїСЂР°РІРѕР№ РіСЂР°РЅРёС†С‹ - РјРµРЅСЏРµРј РЅР°РїСЂР°РІР»РµРЅРёРµ
         }
     }
 
-    // Обработка столкновения с игроком
+    // РћР±СЂР°Р±РѕС‚РєР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ СЃ РёРіСЂРѕРєРѕРј
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
-            // Нанесение урона здоровью игрока
+            // РќР°РЅРµСЃРµРЅРёРµ СѓСЂРѕРЅР° Р·РґРѕСЂРѕРІСЊСЋ РёРіСЂРѕРєР°
             collision.GetComponent<Health>().TakeDamage(damage);
         }
     }
