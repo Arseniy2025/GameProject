@@ -2,33 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Комната с врагами
+// РљРѕРјРЅР°С‚Р° СЃ РІСЂР°РіР°РјРё
 public class Room : MonoBehaviour
 {
-    [SerializeField] private GameObject[] enemies; // Массив врагов в комнате
-    private Vector3[] initialPosition; // Начальные позиции врагов
+    [SerializeField] private GameObject[] enemies; // РњР°СЃСЃРёРІ РІСЂР°РіРѕРІ РІ РєРѕРјРЅР°С‚Рµ
+    private Vector3[] initialPosition; // РќР°С‡Р°Р»СЊРЅС‹Рµ РїРѕР·РёС†РёРё РІСЂР°РіРѕРІ
 
     private void Awake()
     {
-        // Сохранение начальных позиций врагов для респавна
+        // РЎРѕС…СЂР°РЅРµРЅРёРµ РЅР°С‡Р°Р»СЊРЅС‹С… РїРѕР·РёС†РёР№ РІСЂР°РіРѕРІ РґР»СЏ СЂРµСЃРїР°РІРЅР°
         initialPosition = new Vector3[enemies.Length];
         for (int i = 0; i < enemies.Length; i++)
         {
             if (enemies[i] != null)
-                initialPosition[i] = enemies[i].transform.position; // Запоминаем позицию
+                initialPosition[i] = enemies[i].transform.position; // Р—Р°РїРѕРјРёРЅР°РµРј РїРѕР·РёС†РёСЋ
         }
     }
 
-    // Активация/деактивация комнаты
+    // РђРєС‚РёРІР°С†РёСЏ/РґРµР°РєС‚РёРІР°С†РёСЏ РєРѕРјРЅР°С‚С‹
     public void ActivateRoom(bool _status)
     {
-        // Управление активностью врагов и их позициями
+        // РЈРїСЂР°РІР»РµРЅРёРµ Р°РєС‚РёРІРЅРѕСЃС‚СЊСЋ РІСЂР°РіРѕРІ Рё РёС… РїРѕР·РёС†РёСЏРјРё
         for (int i = 0; i < enemies.Length; i++)
         {
             if (enemies[i] != null)
             {
-                enemies[i].SetActive(_status); // Включение/выключение врага
-                enemies[i].transform.position = initialPosition[i]; // Сброс позиции
+                enemies[i].SetActive(_status); // Р’РєР»СЋС‡РµРЅРёРµ/РІС‹РєР»СЋС‡РµРЅРёРµ РІСЂР°РіР°
+                enemies[i].transform.position = initialPosition[i]; // РЎР±СЂРѕСЃ РїРѕР·РёС†РёРё
             }
         }
     }
