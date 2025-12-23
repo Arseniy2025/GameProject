@@ -2,60 +2,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Огненная ловушка с задержкой активации
+// РћРіРЅРµРЅРЅР°СЏ Р»РѕРІСѓС€РєР° СЃ Р·Р°РґРµСЂР¶РєРѕР№ Р°РєС‚РёРІР°С†РёРё
 public class Firetrap : MonoBehaviour
 {
-    [SerializeField] private float damage; // Урон от ловушки
+    [SerializeField] private float damage; // РЈСЂРѕРЅ РѕС‚ Р»РѕРІСѓС€РєРё
 
     [Header("Firetrap Timers")]
-    [SerializeField] private float activationDelay; // Задержка перед активацией
-    [SerializeField] private float activeTime; // Время активности ловушки
-    private Animator anim; // Компонент анимации
-    private SpriteRenderer spriteRend; // Компонент отображения спрайта
+    [SerializeField] private float activationDelay; // Р—Р°РґРµСЂР¶РєР° РїРµСЂРµРґ Р°РєС‚РёРІР°С†РёРµР№
+    [SerializeField] private float activeTime; // Р’СЂРµРјСЏ Р°РєС‚РёРІРЅРѕСЃС‚Рё Р»РѕРІСѓС€РєРё
+    private Animator anim; // РљРѕРјРїРѕРЅРµРЅС‚ Р°РЅРёРјР°С†РёРё
+    private SpriteRenderer spriteRend; // РљРѕРјРїРѕРЅРµРЅС‚ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ СЃРїСЂР°Р№С‚Р°
 
-    private bool triggered; // Ловушка активирована (запущен процесс активации)
-    private bool active; // Ловушка активна и наносит урон
+    private bool triggered; // Р›РѕРІСѓС€РєР° Р°РєС‚РёРІРёСЂРѕРІР°РЅР° (Р·Р°РїСѓС‰РµРЅ РїСЂРѕС†РµСЃСЃ Р°РєС‚РёРІР°С†РёРё)
+    private bool active; // Р›РѕРІСѓС€РєР° Р°РєС‚РёРІРЅР° Рё РЅР°РЅРѕСЃРёС‚ СѓСЂРѕРЅ
 
     private void Awake()
     {
-        anim = GetComponent<Animator>(); // Получение компонентов
+        anim = GetComponent<Animator>(); // РџРѕР»СѓС‡РµРЅРёРµ РєРѕРјРїРѕРЅРµРЅС‚РѕРІ
         spriteRend = GetComponent<SpriteRenderer>();
     }
 
-    // Обработка входа триггера
+    // РћР±СЂР°Р±РѕС‚РєР° РІС…РѕРґР° С‚СЂРёРіРіРµСЂР°
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
             if (!triggered)
-                StartCoroutine(ActivateFiretrap()); // Запуск активации если еще не запущена
+                StartCoroutine(ActivateFiretrap()); // Р—Р°РїСѓСЃРє Р°РєС‚РёРІР°С†РёРё РµСЃР»Рё РµС‰Рµ РЅРµ Р·Р°РїСѓС‰РµРЅР°
 
             if (active)
-                collision.GetComponent<Health>().TakeDamage(damage); // Нанесение урона если ловушка активна
+                collision.GetComponent<Health>().TakeDamage(damage); // РќР°РЅРµСЃРµРЅРёРµ СѓСЂРѕРЅР° РµСЃР»Рё Р»РѕРІСѓС€РєР° Р°РєС‚РёРІРЅР°
         }
     }
 
-    // Корутина активации ловушки
+    // РљРѕСЂСѓС‚РёРЅР° Р°РєС‚РёРІР°С†РёРё Р»РѕРІСѓС€РєРё
     private IEnumerator ActivateFiretrap()
     {
-        // Подготовка к активации - подсветка красным
-        triggered = true; // Установка флага активации
-        spriteRend.color = Color.red; // Визуальное предупреждение
+        // РџРѕРґРіРѕС‚РѕРІРєР° Рє Р°РєС‚РёРІР°С†РёРё - РїРѕРґСЃРІРµС‚РєР° РєСЂР°СЃРЅС‹Рј
+        triggered = true; // РЈСЃС‚Р°РЅРѕРІРєР° С„Р»Р°РіР° Р°РєС‚РёРІР°С†РёРё
+        spriteRend.color = Color.red; // Р’РёР·СѓР°Р»СЊРЅРѕРµ РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ
 
-        // Ожидание задержки
+        // РћР¶РёРґР°РЅРёРµ Р·Р°РґРµСЂР¶РєРё
         yield return new WaitForSeconds(activationDelay);
 
-        // Активация ловушки
-        spriteRend.color = Color.white; // Возврат нормального цвета
-        active = true; // Установка флага активности
-        anim.SetBool("activated", true); // Запуск анимации активации
+        // РђРєС‚РёРІР°С†РёСЏ Р»РѕРІСѓС€РєРё
+        spriteRend.color = Color.white; // Р’РѕР·РІСЂР°С‚ РЅРѕСЂРјР°Р»СЊРЅРѕРіРѕ С†РІРµС‚Р°
+        active = true; // РЈСЃС‚Р°РЅРѕРІРєР° С„Р»Р°РіР° Р°РєС‚РёРІРЅРѕСЃС‚Рё
+        anim.SetBool("activated", true); // Р—Р°РїСѓСЃРє Р°РЅРёРјР°С†РёРё Р°РєС‚РёРІР°С†РёРё
 
-        // Активная фаза
+        // РђРєС‚РёРІРЅР°СЏ С„Р°Р·Р°
         yield return new WaitForSeconds(activeTime);
 
-        // Деактивация ловушки
-        active = false; // Снятие флага активности
-        triggered = false; // Снятие флага активации
-        anim.SetBool("activated", false); // Остановка анимации
+        // Р”РµР°РєС‚РёРІР°С†РёСЏ Р»РѕРІСѓС€РєРё
+        active = false; // РЎРЅСЏС‚РёРµ С„Р»Р°РіР° Р°РєС‚РёРІРЅРѕСЃС‚Рё
+        triggered = false; // РЎРЅСЏС‚РёРµ С„Р»Р°РіР° Р°РєС‚РёРІР°С†РёРё
+        anim.SetBool("activated", false); // РћСЃС‚Р°РЅРѕРІРєР° Р°РЅРёРјР°С†РёРё
     }
 }
