@@ -1,54 +1,61 @@
-// Дополнительные функции, которые можно добавить:
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-// 1. Направление выстрела
-[SerializeField] private Vector2 shootDirection = Vector2.right;
-
-// 2. Случайный разброс
-[SerializeField] private float spreadAngle = 5f;
-
-// 3. Анимация выстрела
-private Animator animator;
-
-
-private void Start()
+// Ловушка-арбалет, которая стреляет стрелами с определенной периодичностью
+public class ArrowTrap : MonoBehaviour
 {
-    // Инициализация компонентов
-    animator = GetComponent<Animator>();
-}
+    // Время перезарядки между выстрелами (в секундах)
+    [SerializeField] private float attackCooldown;
+    
+    // Точка, из которой выпускаются стрелы
+    [SerializeField] private Transform firePoint;
+    
+    // Массив стрел (пул объектов для оптимизации)
+    [SerializeField] private GameObject[] arrows;
+    
+    // Таймер для отслеживания времени с последнего выстрела
+    private float cooldownTimer;
 
-private void Attack()
-{
-    cooldownTimer = 0;
-    
-    // Воспроизведение анимации
-    if (animator != null)
-        animator.SetTrigger("Shoot");
-    
-    
-    // Получение стрелы
-    int arrowIndex = FindArrow();
-    if (arrowIndex == -1) return; // Если стрел нет
-    
-    // Установка позиции и направления
-    GameObject arrow = arrows[arrowIndex];
-    arrow.transform.position = firePoint.position;
-    
-    // Добавление случайного разброса
-    float randomAngle = Random.Range(-spreadAngle, spreadAngle);
-    Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
-    arrow.transform.rotation = rotation;
-    
-    // Активация
-    arrow.GetComponent<EnemyProjectle>().ActivateProjectile();
-}
-
-// Улучшенный метод поиска
-private int FindArrow()
-{
-    for (int i = 0; i < arrows.Length; i++)
+    // Метод выполнения атаки (выстрел стрелой)
+    private void Attack()
     {
-        if (!arrows[i].activeInHierarchy)
-            return i;
+        // Сбрасываем таймер перезарядки
+        cooldownTimer = 0;
+
+        // Получаем индекс доступной стрелы из пула
+        int arrowIndex = FindArrow();
+        
+        // Устанавливаем позицию стрелы в точку выстрела
+        arrows[arrowIndex].transform.position = firePoint.position;
+        
+        // Активируем стрелу через компонент EnemyProjectle
+        arrows[arrowIndex].GetComponent<EnemyProjectle>().ActivateProjectile();
     }
-    return -1; // Явное указание, что стрел нет
+
+    // Метод поиска неактивной стрелы в пуле объектов
+    private int FindArrow()
+    {
+        // Проходим по всем стрелам в массиве
+        for (int i = 0; i < arrows.Length; i++)
+        {
+            // Проверяем, не активна ли стрела в иерархии сцены
+            if (!arrows[i].activeInHierarchy)
+                return i; // Возвращаем индекс первой найденной неактивной стрелы
+        }
+        
+        // Если все стрелы активны, возвращаем индекс 0 (переиспользуем первую стрелу)
+        return 0;
+    }
+
+    // Метод Update вызывается каждый кадр
+    private void Update()
+    {
+        // Увеличиваем таймер на время, прошедшее с последнего кадра
+        cooldownTimer += Time.deltaTime;
+
+        // Проверяем, прошло ли достаточно времени для следующего выстрела
+        if (cooldownTimer >= attackCooldown)
+            Attack(); // Выполняем атаку
+    }
 }
