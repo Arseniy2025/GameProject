@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Проектиль игрока
+// РЎРЅР°СЂСЏРґ РёРіСЂРѕРєР°
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float speed; // Скорость полета
-    private float direction; // Направление полета
-    private bool hit; // Флаг попадания
-    private float lifetime; // Время жизни снаряда
+    [SerializeField] private float speed; // РЎРєРѕСЂРѕСЃС‚СЊ РїРѕР»РµС‚Р°
+    private float direction; // РќР°РїСЂР°РІР»РµРЅРёРµ РїРѕР»РµС‚Р°
+    private bool hit; // Р¤Р»Р°Рі РїРѕРїР°РґР°РЅРёСЏ
+    private float lifetime; // Р’СЂРµРјСЏ Р¶РёР·РЅРё СЃРЅР°СЂСЏРґР°
 
-    private Animator anim; // Компонент анимации
-    private BoxCollider2D boxCollider; // Компонент коллайдера
+    private Animator anim; // РљРѕРјРїРѕРЅРµРЅС‚ Р°РЅРёРјР°С†РёРё
+    private BoxCollider2D boxCollider; // РљРѕРјРїРѕРЅРµРЅС‚ РєРѕР»Р»Р°Р№РґРµСЂР°
 
     private void Awake()
     {
@@ -21,38 +21,38 @@ public class Projectile : MonoBehaviour
 
     private void Update()
     {
-        if (hit) return; // Если попал, прекращаем движение
+        if (hit) return; // Р•СЃР»Рё РїРѕРїР°Р», РїСЂРµРєСЂР°С‰Р°РµРј РґРІРёР¶РµРЅРёРµ
 
-        // Движение снаряда
+        // Р”РІРёР¶РµРЅРёРµ СЃРЅР°СЂСЏРґР°
         float movementSpeed = speed * Time.deltaTime * direction;
         transform.Translate(movementSpeed, 0, 0);
 
-        lifetime += Time.deltaTime; // Обновление времени жизни
-        if (lifetime > 5) gameObject.SetActive(false); // Самоуничтожение через 5 секунд
+        lifetime += Time.deltaTime; // РћР±РЅРѕРІР»РµРЅРёРµ РІСЂРµРјРµРЅРё Р¶РёР·РЅРё
+        if (lifetime > 5) gameObject.SetActive(false); // РЎР°РјРѕСѓРЅРёС‡С‚РѕР¶РµРЅРёРµ С‡РµСЂРµР· 5 СЃРµРєСѓРЅРґ
     }
 
-    // Обработка столкновения
+    // РћР±СЂР°Р±РѕС‚РєР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        hit = true; // Установка флага попадания
-        boxCollider.enabled = false; // Отключение коллайдера
-        anim.SetTrigger("explode"); // Анимация взрыва
+        hit = true; // РЈСЃС‚Р°РЅРѕРІРєР° С„Р»Р°РіР° РїРѕРїР°РґР°РЅРёСЏ
+        boxCollider.enabled = false; // РћС‚РєР»СЋС‡РµРЅРёРµ РєРѕР»Р»Р°Р№РґРµСЂР°
+        anim.SetTrigger("explode"); // РђРЅРёРјР°С†РёСЏ РІР·СЂС‹РІР°
 
-        // Нанесение урона врагу если столкнулись с ним
+        // РќР°РЅРµСЃРµРЅРёРµ СѓСЂРѕРЅР° РІСЂР°РіСѓ РµСЃР»Рё СЃС‚РѕР»РєРЅСѓР»РёСЃСЊ СЃ РЅРёРј
         if (collision.tag == "Enemy")
-            collision.GetComponent<Health>()?.TakeDamage(1); // Оператор ?. - безопасный вызов
+            collision.GetComponent<Health>()?.TakeDamage(1); // РћРїРµСЂР°С‚РѕСЂ ?. - Р±РµР·РѕРїР°СЃРЅС‹Р№ РІС‹Р·РѕРІ
     }
 
-    // Инициализация снаряда
+    // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРЅР°СЂСЏРґР°
     public void SetDirection(float _direction)
     {
-        lifetime = 0; // Сброс времени жизни
-        direction = _direction; // Установка направления
-        gameObject.SetActive(true); // Активация объекта
-        hit = false; // Сброс флага попадания
-        boxCollider.enabled = true; // Включение коллайдера
+        lifetime = 0; // РЎР±СЂРѕСЃ РІСЂРµРјРµРЅРё Р¶РёР·РЅРё
+        direction = _direction; // РЈСЃС‚Р°РЅРѕРІРєР° РЅР°РїСЂР°РІР»РµРЅРёСЏ
+        gameObject.SetActive(true); // РђРєС‚РёРІР°С†РёСЏ РѕР±СЉРµРєС‚Р°
+        hit = false; // РЎР±СЂРѕСЃ С„Р»Р°РіР° РїРѕРїР°РґР°РЅРёСЏ
+        boxCollider.enabled = true; // Р’РєР»СЋС‡РµРЅРёРµ РєРѕР»Р»Р°Р№РґРµСЂР°
 
-        // Разворот спрайта в зависимости от направления
+        // Р Р°Р·РІРѕСЂРѕС‚ СЃРїСЂР°Р№С‚Р° РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РЅР°РїСЂР°РІР»РµРЅРёСЏ
         float localScaleX = transform.localScale.x;
         if (Mathf.Sign(localScaleX) != _direction)
             localScaleX = -localScaleX;
@@ -60,7 +60,7 @@ public class Projectile : MonoBehaviour
         transform.localScale = new Vector3(localScaleX, transform.localScale.y, transform.localScale.z);
     }
 
-    // Деактивация снаряда (вызывается из анимации)
+    // Р”РµР°РєС‚РёРІР°С†РёСЏ СЃРЅР°СЂСЏРґР° (РІС‹Р·С‹РІР°РµС‚СЃСЏ РёР· Р°РЅРёРјР°С†РёРё)
     private void Deactivate()
     {
         gameObject.SetActive(false);
