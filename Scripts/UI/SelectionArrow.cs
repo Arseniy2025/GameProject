@@ -3,65 +3,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Универсальная стрелка для выбора в UI (используется для меню настроек, уровней и т.д.)
+// РЈРЅРёРІРµСЂСЃР°Р»СЊРЅР°СЏ СЃС‚СЂРµР»РєР° РґР»СЏ РІС‹Р±РѕСЂР° РІ UI (РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґР»СЏ РјРµРЅСЋ РЅР°СЃС‚СЂРѕРµРє, СѓСЂРѕРІРЅРµР№ Рё С‚.Рґ.)
 public class SelectionArrow : MonoBehaviour
 {
-    [SerializeField] private RectTransform[] buttons; // Кнопки для навигации
-    private RectTransform arrow; // Ссылка на RectTransform стрелки
-    private int currentPosition; // Текущая выбранная позиция
+    [SerializeField] private RectTransform[] buttons; // РљРЅРѕРїРєРё РґР»СЏ РЅР°РІРёРіР°С†РёРё
+    private RectTransform arrow; // РЎСЃС‹Р»РєР° РЅР° RectTransform СЃС‚СЂРµР»РєРё
+    private int currentPosition; // РўРµРєСѓС‰Р°СЏ РІС‹Р±СЂР°РЅРЅР°СЏ РїРѕР·РёС†РёСЏ
 
     private void Awake()
     {
-        arrow = GetComponent<RectTransform>(); // Получение ссылки на компонент
+        arrow = GetComponent<RectTransform>(); // РџРѕР»СѓС‡РµРЅРёРµ СЃСЃС‹Р»РєРё РЅР° РєРѕРјРїРѕРЅРµРЅС‚
     }
 
     private void OnEnable()
     {
-        currentPosition = 0; // Сброс позиции при активации
-        ChangePosition(0); // Установка начальной позиции
+        currentPosition = 0; // РЎР±СЂРѕСЃ РїРѕР·РёС†РёРё РїСЂРё Р°РєС‚РёРІР°С†РёРё
+        ChangePosition(0); // РЈСЃС‚Р°РЅРѕРІРєР° РЅР°С‡Р°Р»СЊРЅРѕР№ РїРѕР·РёС†РёРё
     }
 
     private void Update()
     {
-        // Навигация с использованием W/S и стрелок
+        // РќР°РІРёРіР°С†РёСЏ СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј W/S Рё СЃС‚СЂРµР»РѕРє
         if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
-            ChangePosition(-1); // Вверх
+            ChangePosition(-1); // Р’РІРµСЂС…
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
-            ChangePosition(1); // Вниз
+            ChangePosition(1); // Р’РЅРёР·
 
-        // Взаимодействие с выбранной опцией (E или Enter)
+        // Р’Р·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ СЃ РІС‹Р±СЂР°РЅРЅРѕР№ РѕРїС†РёРµР№ (E РёР»Рё Enter)
         if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.E))
-            Interact(); // Активация выбранной кнопки
+            Interact(); // РђРєС‚РёРІР°С†РёСЏ РІС‹Р±СЂР°РЅРЅРѕР№ РєРЅРѕРїРєРё
     }
 
-    // Изменение позиции выбора
+    // РР·РјРµРЅРµРЅРёРµ РїРѕР·РёС†РёРё РІС‹Р±РѕСЂР°
     private void ChangePosition(int _change)
     {
         currentPosition += _change;
 
-        // Проверка изменения (не нужно, если change == 0)
+        // РџСЂРѕРІРµСЂРєР° РёР·РјРµРЅРµРЅРёСЏ (РЅРµ РЅСѓР¶РЅРѕ, РµСЃР»Рё change == 0)
         if (_change != 0)
 
-            // Циклическая навигация по массиву кнопок
+            // Р¦РёРєР»РёС‡РµСЃРєР°СЏ РЅР°РІРёРіР°С†РёСЏ РїРѕ РјР°СЃСЃРёРІСѓ РєРЅРѕРїРѕРє
             if (currentPosition < 0)
                 currentPosition = buttons.Length - 1;
             else if (currentPosition > buttons.Length - 1)
                 currentPosition = 0;
 
-        AssignPosition(); // Обновление визуальной позиции
+        AssignPosition(); // РћР±РЅРѕРІР»РµРЅРёРµ РІРёР·СѓР°Р»СЊРЅРѕР№ РїРѕР·РёС†РёРё
     }
 
-    // Установка визуальной позиции стрелки
+    // РЈСЃС‚Р°РЅРѕРІРєР° РІРёР·СѓР°Р»СЊРЅРѕР№ РїРѕР·РёС†РёРё СЃС‚СЂРµР»РєРё
     private void AssignPosition()
     {
-        // Перемещение стрелки по вертикали к позиции выбранной кнопки
+        // РџРµСЂРµРјРµС‰РµРЅРёРµ СЃС‚СЂРµР»РєРё РїРѕ РІРµСЂС‚РёРєР°Р»Рё Рє РїРѕР·РёС†РёРё РІС‹Р±СЂР°РЅРЅРѕР№ РєРЅРѕРїРєРё
         arrow.position = new Vector3(arrow.position.x, buttons[currentPosition].position.y);
     }
 
-    // Взаимодействие с текущей опцией
+    // Р’Р·Р°РёРјРѕРґРµР№СЃС‚РІРёРµ СЃ С‚РµРєСѓС‰РµР№ РѕРїС†РёРµР№
     private void Interact()
     {
-        // Активация события onClick выбранной кнопки
+        // РђРєС‚РёРІР°С†РёСЏ СЃРѕР±С‹С‚РёСЏ onClick РІС‹Р±СЂР°РЅРЅРѕР№ РєРЅРѕРїРєРё
         buttons[currentPosition].GetComponent<Button>().onClick.Invoke();
     }
 }
