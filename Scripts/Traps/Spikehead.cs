@@ -2,80 +2,80 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Шипастая голова, атакующая при обнаружении игрока (наследует от EnemyDamage)
+// РЁРёРїР°СЃС‚Р°СЏ РіРѕР»РѕРІР°, Р°С‚Р°РєСѓСЋС‰Р°СЏ РїСЂРё РѕР±РЅР°СЂСѓР¶РµРЅРёРё РёРіСЂРѕРєР° (РЅР°СЃР»РµРґСѓРµС‚ РѕС‚ EnemyDamage)
 public class Spikehead : EnemyDamage
 {
     [Header("SpikeHead Attributes")]
-    [SerializeField] private float speed; // Скорость атаки
-    [SerializeField] private float range; // Дальность обнаружения игрока
-    [SerializeField] private float checkDelay; // Задержка между проверками
-    [SerializeField] private LayerMask playerLayer; // Слой игрока для обнаружения
-    private Vector3[] directions = new Vector3[4]; // Массив направлений для проверки
-    private Vector3 destination; // Целевая позиция для движения
-    private float checkTimer; // Таймер проверки
-    private bool attacking; // Флаг атаки
+    [SerializeField] private float speed; // РЎРєРѕСЂРѕСЃС‚СЊ Р°С‚Р°РєРё
+    [SerializeField] private float range; // Р”Р°Р»СЊРЅРѕСЃС‚СЊ РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ РёРіСЂРѕРєР°
+    [SerializeField] private float checkDelay; // Р—Р°РґРµСЂР¶РєР° РјРµР¶РґСѓ РїСЂРѕРІРµСЂРєР°РјРё
+    [SerializeField] private LayerMask playerLayer; // РЎР»РѕР№ РёРіСЂРѕРєР° РґР»СЏ РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ
+    private Vector3[] directions = new Vector3[4]; // РњР°СЃСЃРёРІ РЅР°РїСЂР°РІР»РµРЅРёР№ РґР»СЏ РїСЂРѕРІРµСЂРєРё
+    private Vector3 destination; // Р¦РµР»РµРІР°СЏ РїРѕР·РёС†РёСЏ РґР»СЏ РґРІРёР¶РµРЅРёСЏ
+    private float checkTimer; // РўР°Р№РјРµСЂ РїСЂРѕРІРµСЂРєРё
+    private bool attacking; // Р¤Р»Р°Рі Р°С‚Р°РєРё
 
-    // Сброс состояния при активации
+    // РЎР±СЂРѕСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ РїСЂРё Р°РєС‚РёРІР°С†РёРё
     private void OnEnable()
     {
-        Stop(); // Остановка движения
+        Stop(); // РћСЃС‚Р°РЅРѕРІРєР° РґРІРёР¶РµРЅРёСЏ
     }
 
     private void Update()
     {
-        // Движение к цели если в режиме атаки
+        // Р”РІРёР¶РµРЅРёРµ Рє С†РµР»Рё РµСЃР»Рё РІ СЂРµР¶РёРјРµ Р°С‚Р°РєРё
         if (attacking)
             transform.Translate(destination * Time.deltaTime * speed);
         else
         {
-            // Проверка обнаружения игрока по таймеру
+            // РџСЂРѕРІРµСЂРєР° РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ РёРіСЂРѕРєР° РїРѕ С‚Р°Р№РјРµСЂСѓ
             checkTimer += Time.deltaTime;
             if (checkTimer > checkDelay)
-                CheckForPlayer(); // Проверка наличия игрока
+                CheckForPlayer(); // РџСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ РёРіСЂРѕРєР°
         }
     }
 
-    // Проверка обнаружения игрока
+    // РџСЂРѕРІРµСЂРєР° РѕР±РЅР°СЂСѓР¶РµРЅРёСЏ РёРіСЂРѕРєР°
     private void CheckForPlayer()
     {
-        CalculateDirections(); // Расчет направлений
+        CalculateDirections(); // Р Р°СЃС‡РµС‚ РЅР°РїСЂР°РІР»РµРЅРёР№
 
-        // Проверка в 4 направлениях
+        // РџСЂРѕРІРµСЂРєР° РІ 4 РЅР°РїСЂР°РІР»РµРЅРёСЏС…
         for (int i = 0; i < directions.Length; i++)
         {
-            Debug.DrawRay(transform.position, directions[i], Color.red); // Визуализация лучей
+            Debug.DrawRay(transform.position, directions[i], Color.red); // Р’РёР·СѓР°Р»РёР·Р°С†РёСЏ Р»СѓС‡РµР№
             RaycastHit2D hit = Physics2D.Raycast(transform.position, directions[i], range, playerLayer);
 
-            // Если обнаружен игрок и еще не атакуем
+            // Р•СЃР»Рё РѕР±РЅР°СЂСѓР¶РµРЅ РёРіСЂРѕРє Рё РµС‰Рµ РЅРµ Р°С‚Р°РєСѓРµРј
             if (hit.collider != null && !attacking)
             {
-                attacking = true; // Начало атаки
-                destination = directions[i]; // Направление атаки
-                checkTimer = 0; // Сброс таймера
+                attacking = true; // РќР°С‡Р°Р»Рѕ Р°С‚Р°РєРё
+                destination = directions[i]; // РќР°РїСЂР°РІР»РµРЅРёРµ Р°С‚Р°РєРё
+                checkTimer = 0; // РЎР±СЂРѕСЃ С‚Р°Р№РјРµСЂР°
             }
         }
     }
 
-    // Расчет направлений для проверки
+    // Р Р°СЃС‡РµС‚ РЅР°РїСЂР°РІР»РµРЅРёР№ РґР»СЏ РїСЂРѕРІРµСЂРєРё
     private void CalculateDirections()
     {
-        directions[0] = transform.right * range; // Направо
-        directions[1] = -transform.right * range; // Налево
-        directions[2] = transform.up * range; // Вверх
-        directions[3] = -transform.up * range; // Вниз
+        directions[0] = transform.right * range; // РќР°РїСЂР°РІРѕ
+        directions[1] = -transform.right * range; // РќР°Р»РµРІРѕ
+        directions[2] = transform.up * range; // Р’РІРµСЂС…
+        directions[3] = -transform.up * range; // Р’РЅРёР·
     }
 
-    // Остановка атаки
+    // РћСЃС‚Р°РЅРѕРІРєР° Р°С‚Р°РєРё
     private void Stop()
     {
-        destination = transform.position; // Установка цели как текущая позиция (остановка)
-        attacking = false; // Снятие флага атаки
+        destination = transform.position; // РЈСЃС‚Р°РЅРѕРІРєР° С†РµР»Рё РєР°Рє С‚РµРєСѓС‰Р°СЏ РїРѕР·РёС†РёСЏ (РѕСЃС‚Р°РЅРѕРІРєР°)
+        attacking = false; // РЎРЅСЏС‚РёРµ С„Р»Р°РіР° Р°С‚Р°РєРё
     }
 
-    // Обработка столкновения
+    // РћР±СЂР°Р±РѕС‚РєР° СЃС‚РѕР»РєРЅРѕРІРµРЅРёСЏ
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(collision); // Нанесение урона
-        Stop(); // Остановка при любом столкновении
+        base.OnTriggerEnter2D(collision); // РќР°РЅРµСЃРµРЅРёРµ СѓСЂРѕРЅР°
+        Stop(); // РћСЃС‚Р°РЅРѕРІРєР° РїСЂРё Р»СЋР±РѕРј СЃС‚РѕР»РєРЅРѕРІРµРЅРёРё
     }
 }
