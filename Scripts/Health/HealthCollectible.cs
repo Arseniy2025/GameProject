@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Собираемый предмет для восстановления здоровья
+// РЎРѕР±РёСЂР°РµРјС‹Р№ РїСЂРµРґРјРµС‚ РґР»СЏ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ Р·РґРѕСЂРѕРІСЊСЏ
 public class HealthCollectible : MonoBehaviour
 {
-    [SerializeField] private float healthValue; // Количество восстанавливаемого здоровья
-    [SerializeField] private AudioClip pickupSound; // Звук подбора
+    [SerializeField] private float healthValue; // РљРѕР»РёС‡РµСЃС‚РІРѕ РІРѕСЃСЃС‚Р°РЅР°РІР»РёРІР°РµРјРѕРіРѕ Р·РґРѕСЂРѕРІСЊ
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
-            // Восстановление здоровья игрока
+            // Р’РѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµ Р·РґРѕСЂРѕРІСЊСЏ РёРіСЂРѕРєР°
             collision.GetComponent<Health>().AddHealth(healthValue);
-            gameObject.SetActive(false); // Деактивация предмета
-            // Примечание: звук не воспроизводится в этом коде
+            gameObject.SetActive(false); // Р”РµР°РєС‚РёРІР°С†РёСЏ РїСЂРµРґРјРµС‚Р°
         }
     }
+
 }
