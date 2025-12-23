@@ -13,7 +13,7 @@ public class Player_Respawn : MonoBehaviour
     private void Awake()
     {
         playerHealth = GetComponent<Health>();
-        playerMove = GetComponent<PlayerMove>(); // Получаем ссылку на PlayerMove
+        playerMove = GetComponent<PlayerMove>(); // РџРѕР»СѓС‡Р°РµРј СЃСЃС‹Р»РєСѓ РЅР° PlayerMove
         uiManager = FindObjectOfType<UIManager>();
     }
 
@@ -28,27 +28,27 @@ public class Player_Respawn : MonoBehaviour
             return;
         }
 
-        // Респавним здоровье
+        // Р РµСЃРїР°РІРЅРёРј Р·РґРѕСЂРѕРІСЊРµ
         playerHealth.Respawn();
 
-        // Перемещаем персонажа
+        // РџРµСЂРµРјРµС‰Р°РµРј РїРµСЂСЃРѕРЅР°Р¶Р°
         transform.position = currentCheckpoint.position;
 
-        // Сбрасываем скорость
+        // РЎР±СЂР°СЃС‹РІР°РµРј СЃРєРѕСЂРѕСЃС‚СЊ
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.velocity = Vector2.zero;
         }
 
-        // Перемещаем камеру (если есть)
+        // РџРµСЂРµРјРµС‰Р°РµРј РєР°РјРµСЂСѓ (РµСЃР»Рё РµСЃС‚СЊ)
         CameraController cameraController = Camera.main?.GetComponent<CameraController>();
         if (cameraController != null)
         {
             cameraController.MoveToNewRoom(currentCheckpoint.parent);
         }
 
-        Debug.Log("Персонаж респавнен на чекпоинте");
+        Debug.Log("РџРµСЂСЃРѕРЅР°Р¶ СЂРµСЃРїР°РІРЅРµРЅ РЅР° С‡РµРєРїРѕРёРЅС‚Рµ");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -58,20 +58,20 @@ public class Player_Respawn : MonoBehaviour
             currentCheckpoint = collision.transform;
             collision.GetComponent<Collider2D>().enabled = false;
 
-            // Воспроизводим анимацию активации
+            // Р’РѕСЃРїСЂРѕРёР·РІРѕРґРёРј Р°РЅРёРјР°С†РёСЋ Р°РєС‚РёРІР°С†РёРё
             Animator checkpointAnim = collision.GetComponent<Animator>();
             if (checkpointAnim != null)
             {
                 checkpointAnim.SetTrigger("activate");
             }
 
-            // Воспроизводим звук
+            // Р’РѕСЃРїСЂРѕРёР·РІРѕРґРёРј Р·РІСѓРє
             if (checkpointSound != null)
             {
                 AudioSource.PlayClipAtPoint(checkpointSound, transform.position);
             }
 
-            Debug.Log("Чекпоинт активирован!");
+            Debug.Log("Р§РµРєРїРѕРёРЅС‚ Р°РєС‚РёРІРёСЂРѕРІР°РЅ!");
         }
     }
 }
