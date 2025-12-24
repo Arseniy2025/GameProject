@@ -142,7 +142,7 @@ public class PlayerMove : MonoBehaviour
         return horizontalInput == 0 && isGrounded() && !onWall();
     }
 
-    // Метод для принудительной установки размера (можно вызвать из других скриптов)
+    // Метод для принудительной установки размера 
     public void SetFixedScale(float scaleValue)
     {
         playerScale = new Vector3(scaleValue, scaleValue, 1);
@@ -150,3 +150,4 @@ public class PlayerMove : MonoBehaviour
                                           scaleValue, 1);
     }
 }
+
